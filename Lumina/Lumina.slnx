@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="Lumina.vcxproj" />
+  <Project Path="Lumina.vcxproj" Id="cd5ce593-eb74-4ba6-a070-f394429b5a28" />
 </Solution>
