@@ -24,6 +24,9 @@
     <ClCompile Include="dependencies\GLAD\src\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\GLAD\include\glad\glad.h">
@@ -38,9 +41,14 @@
     <ClInclude Include="dependencies\GLFW\include\GLFW\glfw3native.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="dependencies\GLFW\lib\glfw3.dll" />
+    <None Include="res\shader.vs" />
+    <None Include="res\shader.fs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dependencies\GLFW\lib\glfw3.lib" />
