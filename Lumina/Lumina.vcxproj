@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dependencies\GLAD\src\glad.c" />
+    <ClCompile Include="dependencies\stb_image\stb_image.cpp" />
     <ClCompile Include="src\shader.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -28,6 +29,7 @@
     <ClInclude Include="dependencies\GLAD\include\KHR\khrplatform.h" />
     <ClInclude Include="dependencies\GLFW\include\GLFW\glfw3.h" />
     <ClInclude Include="dependencies\GLFW\include\GLFW\glfw3native.h" />
+    <ClInclude Include="dependencies\stb_image\stb_image.h" />
     <ClInclude Include="src\shader.h" />
   </ItemGroup>
   <ItemGroup>
@@ -147,7 +149,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLAD\include;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLFW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\stb_image;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLAD\include;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLFW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -164,7 +166,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLAD\include;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLFW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\stb_image;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLAD\include;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLFW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
