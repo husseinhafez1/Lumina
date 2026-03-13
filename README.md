@@ -8,9 +8,9 @@ Real-time OpenGL renderer built while studying [Real-Time Rendering 4th ed.](htt
 - Shader class — loads from file, compiles, links, uniform setters
 - VAO, VBO, EBO setup
 - Vertex colors via vertex attributes
+- Textures
 
 ## Planned
-- Textures
 - 3D camera and perspective projection
 - Mesh loading
 - Phong/Blinn-Phong lighting
