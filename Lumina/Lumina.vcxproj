@@ -149,7 +149,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\stb_image;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLAD\include;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLFW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\glm;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\stb_image;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLAD\include;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLFW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -166,7 +166,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\stb_image;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLAD\include;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLFW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\glm;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\stb_image;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLAD\include;C:\Users\Legon\Desktop\Lumina\Lumina\dependencies\GLFW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
