@@ -1,7 +1,4 @@
 # Lumina
-Real-time OpenGL renderer built while studying [Real-Time Rendering 4th ed.](https://www.realtimerendering.com/) and [LearnOpenGL](https://learnopengl.com/).
-
----
 
 ## Implemented
 - Window and OpenGL context via GLFW/GLAD
