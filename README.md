@@ -6,9 +6,9 @@
 - VAO, VBO, EBO setup
 - Vertex colors via vertex attributes
 - Textures
+- 3D camera and perspective projection
 
 ## Planned
-- 3D camera and perspective projection
 - Mesh loading
 - Phong/Blinn-Phong lighting
 - Shadow maps
