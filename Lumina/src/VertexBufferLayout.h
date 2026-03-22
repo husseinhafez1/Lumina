@@ -19,10 +19,10 @@ struct VertexBufferElement {
 };
 
 class VertexBufferLayout {
-public:
+private:
 	std::vector<VertexBufferElement> elements;
 	unsigned int stride = 0;
-
+public:
 	template<typename T>
 	void push(unsigned int) {
 		static_assert(false, "Unsupported type");

@@ -3,9 +3,9 @@
 #include <glad/glad.h>
 
 class VertexBuffer {
-public:
+private:
 	unsigned int ID;
-
+public:
 	VertexBuffer(const void* data, unsigned int size) {
 		glGenBuffers(1, &ID);
 		glBindBuffer(GL_ARRAY_BUFFER, ID);
