@@ -65,6 +65,9 @@
     <ClInclude Include="src\VertexArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="dependencies\GLFW\lib\glfw3.dll" />

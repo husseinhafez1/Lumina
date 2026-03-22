@@ -13,6 +13,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
+#include "Texture.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -123,50 +124,10 @@ int main() {
 		VertexArray vao;
 		vao.AddBuffer(vbo, layout);
 
-		unsigned int texture1, texture2;
-		glGenTextures(1, &texture1);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture1);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		int width, height, nrChannels;
-		unsigned char* data = stbi_load("textures/container.jpg", &width, &height, &nrChannels, 0);
-		if (data)
-		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
-		else
-		{
-			std::cout << "Failed to load texture" << std::endl;
-		}
-		stbi_image_free(data);
-
-		glGenTextures(1, &texture2);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture2);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		data = stbi_load("textures/awesomeface.png", &width, &height, &nrChannels, 0);
-		if (data)
-		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
-		else
-		{
-			std::cout << "Failed to load texture" << std::endl;
-		}
-		stbi_image_free(data);
-
 		Shader shader("res/shader.vs", "res/shader.fs");
+
+		Texture texture1("textures/container.jpg");
+		Texture texture2("textures/awesomeface.png");
 
 		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 		glfwSetCursorPosCallback(window, mouse_callback);
@@ -200,12 +161,11 @@ int main() {
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, texture1);
-			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, texture2);
-
 			shader.use();
+
+			texture1.Bind(0);
+			texture2.Bind(1);
+
 			glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 			shader.setMat4("projection", projection);
 
@@ -230,8 +190,6 @@ int main() {
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 		}
-		glDeleteTextures(1, &texture1);
-		glDeleteTextures(1, &texture2);
 	}
 	glfwDestroyWindow(window);
 	glfwTerminate();
