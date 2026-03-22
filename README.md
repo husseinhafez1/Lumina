@@ -1,20 +1,38 @@
 # Lumina
+A real-time renderer built in C++ and OpenGL as a learning project.
+
+---
 
 ## Implemented
 - Window and OpenGL context via GLFW/GLAD
-- Shader class — loads from file, compiles, links, uniform setters
-- VAO, VBO, EBO setup
-- Vertex colors via vertex attributes
-- Textures
-- 3D camera and perspective projection
+- Shader class — file loading, compilation, uniforms
+- Texture class — automatic format detection, mipmaps
+- VertexBuffer, IndexBuffer, VertexBufferLayout, VertexArray abstractions
+- 3D camera — mouse look, WASD movement, scroll zoom
+- MVP matrix pipeline — model, view, projection transforms
+- Depth testing
 
 ## Planned
-- Mesh loading
+- Mesh loading (Assimp)
 - Phong/Blinn-Phong lighting
-- Shadow maps
+- Multiple light types
+- Shadow mapping
 - Normal mapping
 - Deferred shading + SSAO
 - PBR with IBL
 - HDR, bloom, tone mapping
 - ImGui debug UI
-- Vulkan backend alongside OpenGL
+- Vulkan backend
+
+---
+
+## Building
+Built with Visual Studio 2022 on Windows.
+
+**Dependencies** (included in repo):
+- GLFW
+- GLAD
+- GLM
+- stb_image
+
+Open `Lumina.sln` and build in Visual Studio.
