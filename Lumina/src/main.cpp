@@ -60,8 +60,6 @@ int main() {
 
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-	stbi_set_flip_vertically_on_load(true);
-
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -106,16 +104,16 @@ int main() {
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
 
-	unsigned int indices[] = {
-		0, 1, 2,
-		0, 3, 2 
-	};
+	//unsigned int indices[] = {
+	//	0, 1, 2,
+	//	0, 3, 2 
+	//};
 
 
 	// block to ensure release of resources before terminating the glfw context
 	{
 		VertexBuffer vbo(vertices, sizeof(vertices));
-		IndexBuffer ibo(indices, 6);
+		//IndexBuffer ibo(indices, 6);
 
 		VertexBufferLayout layout;
 		layout.push<float>(3);
