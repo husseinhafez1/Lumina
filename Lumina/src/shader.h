@@ -8,12 +8,16 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <unordered_map>
 
 class Shader
 {
-public:
+private:
 	unsigned int ID;
+	mutable std::unordered_map<std::string, int> uniformLocationCache;
 
+	int getUniformLocation(const std::string& name) const;
+public:
 	explicit Shader(const char* vertexPath, const char* fragmentPath);
 	~Shader();
 	
