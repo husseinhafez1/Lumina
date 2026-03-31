@@ -1,38 +1,31 @@
 # Lumina
-A real-time renderer built in C++ and OpenGL as a learning project.
 
----
+A real-time renderer built in C++ and OpenGL, developed as a learning project to understand the fundamentals of graphics programming and the rendering pipeline.
 
-## Implemented
-- Window and OpenGL context via GLFW/GLAD
-- Shader class — file loading, compilation, uniforms
-- Texture class — automatic format detection, mipmaps
-- VertexBuffer, IndexBuffer, VertexBufferLayout, VertexArray abstractions
-- 3D camera — mouse look, WASD movement, scroll zoom
-- MVP matrix pipeline — model, view, projection transforms
-- Depth testing
+## implemented
+- RAII wrappers for GPU objects (VAO, VBO, IBO, shaders, textures)
+- Phong lighting model (ambient, diffuse, specular)
+- Material system with diffuse + specular texture maps
+- Uniform caching for efficient shader parameter updates
+- Free-look camera with mouse + keyboard input
 
-## Planned
-- Mesh loading (Assimp)
-- Phong/Blinn-Phong lighting
-- Multiple light types
+## in progress
+- Multiple light types (point, directional, spot)
 - Shadow mapping
-- Normal mapping
-- Deferred shading + SSAO
-- PBR with IBL
-- HDR, bloom, tone mapping
-- ImGui debug UI
-- Vulkan backend
+- PBR (physically based rendering) with metallic/roughness workflow
+- Model loading via Assimp
 
----
+## notes
+**Phong lighting** — approximates how light interacts with surfaces using three components: 
+ambient (base indirect light), diffuse (direct light hitting the surface), 
+and specular (highlight reflection). Not physically accurate but cheap and effective.
 
-## Building
-Built with Visual Studio 2022 on Windows.
+**Texture maps** — instead of flat colors, surfaces sample from textures. 
+The diffuse map controls base color, the specular map controls which parts 
+of the surface are shiny (white = shiny, black = matte).
 
-**Dependencies** (included in repo):
-- GLFW
-- GLAD
-- GLM
-- stb_image
+**RAII** — every GPU resource is wrapped in a C++ object. Constructor allocates on the GPU, 
+destructor frees it. No manual cleanup needed.
 
-Open `Lumina.sln` and build in Visual Studio.
+## built with
+OpenGL 3.3 · GLFW · GLAD · glm · stb_image
