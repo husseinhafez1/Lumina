@@ -162,7 +162,10 @@ int main() {
 			containerTexture.Bind(0);
 			lightingShader.setInt("material.specular", 1);
 			containerSpecularTexture.Bind(1);
-			lightingShader.setVec3("light.position", lightPos);
+			lightingShader.setVec3("light.position", camera.Position);
+			lightingShader.setVec3("light.direction", camera.Front);
+			lightingShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+			lightingShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
 			lightingShader.setVec3("viewPos", camera.Position);
 
 			lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
@@ -196,16 +199,16 @@ int main() {
 				glDrawArrays(GL_TRIANGLES, 0, 36);
 			}
 
-			lightCubeShader.use();
-			lightCubeShader.setMat4("projection", projection);
-			lightCubeShader.setMat4("view", view);
-			model = glm::mat4(1.0f);
-			model = glm::translate(model, lightPos);
-			model = glm::scale(model, glm::vec3(0.2f));
-			lightCubeShader.setMat4("model", model);
+			//lightCubeShader.use();
+			//lightCubeShader.setMat4("projection", projection);
+			//lightCubeShader.setMat4("view", view);
+			//model = glm::mat4(1.0f);
+			//model = glm::translate(model, lightPos);
+			//model = glm::scale(model, glm::vec3(0.2f));
+			//lightCubeShader.setMat4("model", model);
 
-			lightVAO.Bind();
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			//lightVAO.Bind();
+			//glDrawArrays(GL_TRIANGLES, 0, 36);
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
