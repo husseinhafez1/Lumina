@@ -2,7 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
-Window::Window(const unsigned int width, const unsigned int height)
+Window::Window(const unsigned int width, const unsigned int height) : m_width(width), m_height(height)
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

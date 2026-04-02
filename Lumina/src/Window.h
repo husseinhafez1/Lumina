@@ -9,6 +9,8 @@ struct GLFWwindow;
 class Window {
 private:
     GLFWwindow* window;
+	unsigned int m_width;
+	unsigned int m_height;
 public:
     Window(const Window&) = delete;
     Window& operator=(const Window&) = delete;
@@ -19,6 +21,9 @@ public:
     ~Window();
 
     GLFWwindow* GetHandle() const { return window; }
+
+	unsigned int GetWidth() const { return m_width; }
+	unsigned int GetHeight() const { return m_height; }
 
     bool isClosed() const;
 };

@@ -2,10 +2,11 @@
 
 struct GLFWwindow;
 class Camera;
+class Window;
 
 class Input {
 public:
-    explicit Input(GLFWwindow* window, Camera& camera);
+    explicit Input(Window& window, Camera& camera);
     ~Input();
 
     Input(const Input&) = delete;
@@ -17,9 +18,9 @@ public:
     void ProcessMouseScroll(double xoffset, double yoffset);
 
 private:
-    GLFWwindow* m_window;
+    Window& m_window;
     Camera& m_camera;
-    float lastX = 0.0f, lastY = 0.0f;
+    float lastX = 400.0f, lastY = 300.0f;
     bool firstMouse = true;
 
     static void MouseCallback(GLFWwindow* window, double xpos, double ypos);

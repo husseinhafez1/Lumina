@@ -20,14 +20,6 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
-float lastX = 400, lastY = 300;
-bool firstMouse = true;
-
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-
 int main() {
 	Window window(SCR_WIDTH, SCR_HEIGHT);
 
@@ -114,7 +106,11 @@ int main() {
 
 	// block to ensure release of resources before terminating the glfw context
 	{
-		Input input(window.GetHandle(), camera);
+		Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+		float deltaTime = 0.0f;
+		float lastFrame = 0.0f;
+
+		Input input(window, camera);
 		input.SetupCallbacks();
 
 		VertexBuffer vbo(vertices, sizeof(vertices));
