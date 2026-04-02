@@ -14,7 +14,7 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Texture.h"
-
+#include "Window.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -24,34 +24,16 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-bool firstMouse = true;
-
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 float lastX = 400, lastY = 300;
+bool firstMouse = true;
 
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 int main() {
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	// for MacOS
-#ifdef __APPLE__
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Lumina", NULL, NULL);
-	if (window == NULL) {
-		std::cout << "Failed to create GLFW windows" << std::endl;
-		glfwTerminate();
-		return -1;
-	}
-	glfwMakeContextCurrent(window);
-	
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	Window window(SCR_WIDTH, SCR_HEIGHT);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "Failed to initialize GLAD" << std::endl;
@@ -134,6 +116,11 @@ int main() {
 		glm::vec3(0.2f, 0.2f, 1.0f)
 	};
 
+
+	glfwSetFramebufferSizeCallback(window.GetHandle(), framebuffer_size_callback);
+	glfwSetCursorPosCallback(window.GetHandle(), mouse_callback);
+	glfwSetScrollCallback(window.GetHandle(), scroll_callback);
+
 	// block to ensure release of resources before terminating the glfw context
 	{
 		VertexBuffer vbo(vertices, sizeof(vertices));
@@ -155,18 +142,14 @@ int main() {
 		Texture containerTexture("textures/container2.png");
 		Texture containerSpecularTexture("textures/container2_specular.png");
 
-		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-		glfwSetCursorPosCallback(window, mouse_callback);
-		glfwSetScrollCallback(window, scroll_callback);
-
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-		while (!glfwWindowShouldClose(window)) {
+		while (window.isClosed()) {
 			float currentFrame = static_cast<float>(glfwGetTime());
 			deltaTime = currentFrame - lastFrame;
 			lastFrame = currentFrame;
 
-			processInput(window);
+			processInput(window.GetHandle());
 
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -265,12 +248,10 @@ int main() {
 			//lightVAO.Bind();
 			//glDrawArrays(GL_TRIANGLES, 0, 36);
 
-			glfwSwapBuffers(window);
+			glfwSwapBuffers(window.GetHandle());
 			glfwPollEvents();
 		}
 	}
-	glfwDestroyWindow(window);
-	glfwTerminate();
 	return 0;
 }
 
@@ -312,7 +293,6 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
 
 	camera.ProcessMouseMovement(xoffset, yoffset);
 }
-
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
