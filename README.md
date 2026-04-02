@@ -8,9 +8,9 @@ A real-time renderer built in C++ and OpenGL, developed as a learning project to
 - Material system with diffuse + specular texture maps
 - Uniform caching for efficient shader parameter updates
 - Free-look camera with mouse + keyboard input
+- Multiple light types (point, directional, spot)
 
 ## in progress
-- Multiple light types (point, directional, spot)
 - Shadow mapping
 - PBR (physically based rendering) with metallic/roughness workflow
 - Model loading via Assimp
