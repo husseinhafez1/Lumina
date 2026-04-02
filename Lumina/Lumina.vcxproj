@@ -21,11 +21,13 @@
   <ItemGroup>
     <ClCompile Include="dependencies\GLAD\src\glad.c" />
     <ClCompile Include="dependencies\stb_image\stb_image.cpp" />
+    <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\shader.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="dependencies\GLAD\include\glad\glad.h" />
     <ClInclude Include="dependencies\GLAD\include\KHR\khrplatform.h" />
