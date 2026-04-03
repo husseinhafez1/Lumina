@@ -66,7 +66,12 @@ void Input::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
 }
 
 void Input::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
-	glViewport(0, 0, width, height);
+	Input* input = static_cast<Input*>(glfwGetWindowUserPointer(window));
+	if (input) {
+		input->m_window.SetWidth(static_cast<unsigned int>(width));
+		input->m_window.SetHeight(static_cast<unsigned int>(height));
+		glViewport(0, 0, width, height);
+	}
 }
 
 void Input::SetupCallbacks() {

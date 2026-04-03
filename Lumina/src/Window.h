@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <stdexcept>
-#include "Camera.h"
 
 struct GLFWwindow;
 
@@ -22,8 +21,21 @@ public:
 
     GLFWwindow* GetHandle() const { return window; }
 
-	unsigned int GetWidth() const { return m_width; }
-	unsigned int GetHeight() const { return m_height; }
+    unsigned int GetWidth() const {
+		return m_width;
+    }
+
+    unsigned int GetHeight() const {
+        return m_height;
+    }
+
+    void SetWidth(unsigned int width) {
+        m_width = width;
+	}
+
+    void SetHeight(unsigned int height) {
+        m_height = height;
+	}
 
     bool isClosed() const;
 };
