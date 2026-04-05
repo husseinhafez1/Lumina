@@ -79,3 +79,10 @@ void Input::SetupCallbacks() {
 	glfwSetScrollCallback(m_window.GetHandle(), ScrollCallback);
 	glfwSetFramebufferSizeCallback(m_window.GetHandle(), FramebufferSizeCallback);
 }
+
+bool Input::isKeyJustPressed(int key) {
+	bool current = glfwGetKey(m_window.GetHandle(), key) == GLFW_PRESS;
+	bool wasPressed = m_keyStates[key];
+	m_keyStates[key] = current;
+	return current && !wasPressed;
+}

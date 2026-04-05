@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 struct GLFWwindow;
 class Camera;
 class Window;
@@ -17,9 +19,11 @@ public:
     void ProcessMouseMovement(double xposIn, double yposIn);
     void ProcessMouseScroll(double xoffset, double yoffset);
 
+    bool isKeyJustPressed(int key);
 private:
     Window& m_window;
     Camera& m_camera;
+    std::unordered_map<int, bool> m_keyStates;
     float lastX = 400.0f, lastY = 300.0f;
     bool firstMouse = true;
 

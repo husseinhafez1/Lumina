@@ -125,6 +125,8 @@ int main() {
 		Texture containerTexture("textures/container2.png");
 		Texture containerSpecularTexture("textures/container2_specular.png");
 
+		bool spotlightOn = true;
+
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		while (window.isClosed()) {
@@ -182,11 +184,28 @@ int main() {
 			lightingShader.setFloat("pointLights[3].linear", 0.09f);
 			lightingShader.setFloat("pointLights[3].quadratic", 0.032f);
 			// spotLight
+			if (input.isKeyJustPressed(GLFW_KEY_T))
+			{
+				spotlightOn = !spotlightOn;
+			}
+
+			if (spotlightOn)
+			{
+				lightingShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+				lightingShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+				lightingShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+			}
+			else
+			{
+				lightingShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+				lightingShader.setVec3("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
+				lightingShader.setVec3("spotLight.specular", 0.0f, 0.0f, 0.0f);
+			}
 			lightingShader.setVec3("spotLight.position", camera.Position);
 			lightingShader.setVec3("spotLight.direction", camera.Front);
-			lightingShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-			lightingShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-			lightingShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+			//lightingShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+			//lightingShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+			//lightingShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
 			lightingShader.setFloat("spotLight.constant", 1.0f);
 			lightingShader.setFloat("spotLight.linear", 0.09f);
 			lightingShader.setFloat("spotLight.quadratic", 0.032f);
@@ -228,7 +247,6 @@ int main() {
 				lightCubeShader.setMat4("model", model);
 				glDrawArrays(GL_TRIANGLES, 0, 36);
 			}
-
 
 			glfwSwapBuffers(window.GetHandle());
 			glfwPollEvents();
