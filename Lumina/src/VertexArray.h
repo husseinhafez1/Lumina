@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
+#include "IndexBuffer.h"
 
 class VertexArray {
 private:
@@ -26,16 +27,17 @@ public:
         glBindVertexArray(0);
     }
 
-    void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout) {
+    void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout, const IndexBuffer* ebo = nullptr) {
         Bind();
         vb.Bind();
+        if (ebo) ebo->Bind();
 
         const auto& elements = layout.GetElements();
         unsigned int offset = 0;
 
         for (unsigned int i = 0; i < elements.size(); i++) {
             const auto& element = elements[i];
-            glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStride(), (const void*)offset);
+            glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStride(), (const void*)(uintptr_t)offset);
             glEnableVertexAttribArray(i);
             offset += element.count * VertexBufferElement::GetSizeOfType(element.type);
         }
