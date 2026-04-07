@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <assimp/Importer.hpp>
 
 #include <iostream>
 
@@ -27,6 +28,9 @@ int main() {
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
+
+	Assimp::Importer importer;
+	std::cout << "Assimp works\n";
 
 	glEnable(GL_DEPTH_TEST);
 
