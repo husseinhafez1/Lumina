@@ -87,6 +87,7 @@
     <None Include="res\color.fs" />
     <None Include="res\light_cube.fs" />
     <None Include="res\light_cube.vs" />
+    <None Include="Lumina.slnx" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dependencies\GLFW\lib\glfw3.lib" />
