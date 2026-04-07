@@ -5,13 +5,20 @@
 #include <string>
 #include <iostream>
 
+enum TextureType {
+    DIFFUSE,
+    SPECULAR,
+};
+
+
 class Texture {
 private:
 	unsigned int ID;
-	std::string type;
+	TextureType type_;
+	std::string path_;
 
 public:
-    Texture(const char* path) {
+    Texture(const char* path, TextureType type) : type_(type), path_(path) {
         glGenTextures(1, &ID);
         glBindTexture(GL_TEXTURE_2D, ID);
 
@@ -37,6 +44,11 @@ public:
         }
         stbi_image_free(data);
     }
+
+	unsigned int GetID() const { return ID; }
+	TextureType GetType() const { return type_; }
+	void SetType(TextureType type) { type_ = type; }
+	std::string GetPath() const { return path_; }
 
     ~Texture() {
         glDeleteTextures(1, &ID);

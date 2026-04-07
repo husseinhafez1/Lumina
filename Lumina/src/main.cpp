@@ -126,8 +126,8 @@ int main() {
 		Shader lightingShader("res/color.vs", "res/color.fs");
 		Shader lightCubeShader("res/light_cube.vs", "res/light_cube.fs");
 
-		Texture containerTexture("textures/container2.png");
-		Texture containerSpecularTexture("textures/container2_specular.png");
+		Texture containerTexture("textures/container2.png", TextureType::DIFFUSE);
+		Texture containerSpecularTexture("textures/container2_specular.png", TextureType::SPECULAR);
 
 		bool spotlightOn = true;
 
