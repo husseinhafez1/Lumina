@@ -1,11 +1,11 @@
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture*> textures) {
-	this->vertices = std::move(vertices);
-	this->indices = std::move(indices);
-	this->textures = std::move(textures);
-
-	setupMesh();
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture*> textures, glm::vec3 color) {
+    this->vertices = std::move(vertices);
+    this->indices = std::move(indices);
+    this->textures = std::move(textures);
+    this->diffuseColor = color;
+    setupMesh();
 }
 
 void Mesh::setupMesh() {
@@ -22,19 +22,27 @@ void Mesh::setupMesh() {
 }
 
 void Mesh::Draw(Shader& shader) {
-    unsigned int diffuseNr = 0;
-    unsigned int specularNr = 0;
-    for (unsigned int i = 0; i < textures.size(); i++) {
-        std::string number;
-		std::string name = textures[i]->GetType() == TextureType::DIFFUSE ? "diffuse" : "specular";
-        if (textures[i]->GetType() == TextureType::DIFFUSE)
-			number = std::to_string(diffuseNr++);
-        else if (textures[i]->GetType() == TextureType::SPECULAR)
-			number = std::to_string(specularNr++);
+    bool hasTexture = !textures.empty();
+    shader.setBool("hasTexture", hasTexture);
 
-		shader.setInt((name + number).c_str(), i);
-        textures[i]->Bind(i);
+    if (hasTexture) {
+        unsigned int diffuseNr = 0;
+        unsigned int specularNr = 0;
+        for (unsigned int i = 0; i < textures.size(); i++) {
+            std::string number;
+            std::string name = textures[i]->GetType() == TextureType::DIFFUSE ? "diffuse" : "specular";
+            if (textures[i]->GetType() == TextureType::DIFFUSE)
+                number = std::to_string(diffuseNr++);
+            else if (textures[i]->GetType() == TextureType::SPECULAR)
+                number = std::to_string(specularNr++);
+            shader.setInt((name + number).c_str(), i);
+            textures[i]->Bind(i);
+        }
     }
+    else {
+        shader.setVec3("materialColor", diffuseColor);
+    }
+
     VAO->Bind();
     glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
     VAO->Unbind();

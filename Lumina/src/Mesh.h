@@ -26,8 +26,9 @@ public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture*> textures;
+    glm::vec3 diffuseColor = glm::vec3(0.8f);
 
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture*> textures);
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture*> textures, glm::vec3 color = glm::vec3(0.8f));
 
     Mesh(Mesh&& other) = default;
     Mesh& operator=(Mesh&& other) = default;

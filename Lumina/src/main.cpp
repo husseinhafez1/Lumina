@@ -35,7 +35,7 @@ int main() {
 
 	// block to ensure release of resources before terminating the glfw context
 	{
-		Model ourModel("models/backpack.obj");
+		Model ourModel("models/IronMan/IronMan.obj");
 
 		Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 		float deltaTime = 0.0f;
@@ -57,7 +57,7 @@ int main() {
 
 			input.ProcessKeyboard(deltaTime);
 
-			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+			glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			lightingShader.use();
