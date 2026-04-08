@@ -88,7 +88,7 @@ std::vector<Texture*> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType
 		if (!skip) {
 			auto texture = std::make_unique<Texture>((directory + '/' + str.C_Str()).c_str(), typeName);
 			textures.push_back(texture.get());
-			textures_loaded.push_back(texture);
+			textures_loaded.push_back(std::move(texture));
 		}
 	}
 
