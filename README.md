@@ -9,11 +9,11 @@ A real-time renderer built in C++ and OpenGL, developed as a learning project to
 - Uniform caching for efficient shader parameter updates
 - Free-look camera with mouse + keyboard input
 - Multiple light types (point, directional, spot)
+- Model loading via Assimp
 
 ## in progress
 - Shadow mapping
 - PBR (physically based rendering) with metallic/roughness workflow
-- Model loading via Assimp
 
 ## notes
 **Phong lighting** — approximates how light interacts with surfaces using three components: 
