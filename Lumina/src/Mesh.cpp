@@ -37,5 +37,4 @@ void Mesh::Draw(Shader& shader) {
     VAO->Bind();
     glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, nullptr);
     VAO->Unbind();
-    glActiveTexture(GL_TEXTURE0);
 }
