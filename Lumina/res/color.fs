@@ -1,5 +1,4 @@
 #version 330 core
-out vec4 FragColor;
 
 struct Material {
     sampler2D diffuse;
@@ -42,28 +41,18 @@ struct SpotLight {
     vec3 specular;       
 };
 
-in vec3 FragPos;
-in vec3 Normal;
+out vec4 FragColor;
+
 in vec2 TexCoords;
 
-uniform vec3 viewPos;
-uniform SpotLight spotLight;
-uniform Material material;
-
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
+uniform sampler2D diffuse0;
 
 void main()
-{
-    vec3 norm = normalize(Normal);
-    vec3 viewDir = normalize(viewPos - FragPos);
-    
-    vec3 results = CalcSpotLight(spotLight, norm, FragPos, viewDir);
-    
-    FragColor = vec4(results, 1.0);
+{    
+    FragColor = texture(diffuse0, TexCoords);
 }
 
+/*
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 {
     vec3 lightDir = normalize(-light.direction);
@@ -124,4 +113,4 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
     return (ambient + diffuse + specular);
-}
+} */

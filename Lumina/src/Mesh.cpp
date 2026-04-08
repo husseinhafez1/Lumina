@@ -25,10 +25,14 @@ void Mesh::Draw(Shader& shader) {
     unsigned int diffuseNr = 0;
     unsigned int specularNr = 0;
     for (unsigned int i = 0; i < textures.size(); i++) {
+        std::string number;
+		std::string name = textures[i]->GetType() == TextureType::DIFFUSE ? "diffuse" : "specular";
         if (textures[i]->GetType() == TextureType::DIFFUSE)
-            shader.setInt("material.diffuse", i);
+			number = std::to_string(diffuseNr++);
         else if (textures[i]->GetType() == TextureType::SPECULAR)
-            shader.setInt("material.specular", i);
+			number = std::to_string(specularNr++);
+
+		shader.setInt((name + number).c_str(), i);
         textures[i]->Bind(i);
     }
     VAO->Bind();
