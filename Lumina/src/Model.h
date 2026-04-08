@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -18,7 +19,7 @@ public:
 private:
 	std::vector<Mesh> meshes;
 	std::string directory;
-	std::vector<Texture*> textures_loaded;
+	std::vector<std::unique_ptr<Texture>> textures_loaded;
 
 	void loadModel(const std::string& path);
 	void processNode(aiNode* node, const aiScene* scene);

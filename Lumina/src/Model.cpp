@@ -25,12 +25,10 @@ void Model::loadModel(const std::string& path) {
 
 void Model::processNode(aiNode* node, const aiScene* scene) {
 	for (unsigned int i = 0; i < node->mNumMeshes; i++) {
-		std::cout << "Processing mesh " << i << "/" << node->mNumMeshes << std::endl;
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		meshes.push_back(processMesh(mesh, scene));
 	}
 	for (unsigned int i = 0; i < node->mNumChildren; i++) {
-		std::cout << "Processing child " << i << "/" << node->mNumChildren << std::endl;
 		processNode(node->mChildren[i], scene);
 	}
 }
@@ -81,15 +79,15 @@ std::vector<Texture*> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType
 		bool skip = false;
 		for (unsigned int j = 0; j < textures_loaded.size(); j++) {
 			if (std::strcmp(textures_loaded[j]->GetPath().c_str(), str.C_Str()) == 0) {
-				textures.push_back(textures_loaded[j]);
+				textures.push_back(textures_loaded[j].get());
 				skip = true;
 				break;
 			}
 		}
 			
 		if (!skip) {
-			Texture* texture = new Texture((directory + '/' + str.C_Str()).c_str(), typeName);
-			textures.push_back(texture);
+			auto texture = std::make_unique<Texture>((directory + '/' + str.C_Str()).c_str(), typeName);
+			textures.push_back(texture.get());
 			textures_loaded.push_back(texture);
 		}
 	}
