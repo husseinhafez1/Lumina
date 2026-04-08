@@ -31,7 +31,7 @@ void Mesh::Draw(Shader& shader) {
             number = std::to_string(diffuseNr++);
         else if (textures[i]->GetType() == TextureType::SPECULAR)
             number = std::to_string(specularNr++);
-        shader.setInt((name + number).c_str(), i);
+        shader.setInt(("material." + name + number).c_str(), i);
         textures[i]->Bind(i);
     }
     VAO->Bind();
