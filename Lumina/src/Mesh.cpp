@@ -34,7 +34,9 @@ void Mesh::Draw(Shader& shader) {
         shader.setInt(("material." + name + number).c_str(), i);
         textures[i]->Bind(i);
     }
+	glActiveTexture(GL_TEXTURE0);
+
     VAO->Bind();
-    glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
     VAO->Unbind();
 }
