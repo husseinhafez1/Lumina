@@ -22,21 +22,17 @@ void Mesh::setupMesh() {
 }
 
 void Mesh::Draw(Shader& shader) {
-    unsigned int diffuseNr = 1;
-    unsigned int specularNr = 1;
+    unsigned int diffuseNr = 0;
+    unsigned int specularNr = 0;
     for (unsigned int i = 0; i < textures.size(); i++) {
-        std::string number;
-        std::string name = textures[i]->GetType() == TextureType::DIFFUSE ? "texture_diffuse" : "texture_specular";
         if (textures[i]->GetType() == TextureType::DIFFUSE)
-            number = std::to_string(diffuseNr++);
+            shader.setInt("material.diffuse", i);
         else if (textures[i]->GetType() == TextureType::SPECULAR)
-            number = std::to_string(specularNr++);
-        shader.setInt(("material." + name + number).c_str(), i);
+            shader.setInt("material.specular", i);
         textures[i]->Bind(i);
     }
-	glActiveTexture(GL_TEXTURE0);
-
     VAO->Bind();
     glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
     VAO->Unbind();
+    glActiveTexture(GL_TEXTURE0);
 }
