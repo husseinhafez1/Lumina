@@ -35,7 +35,7 @@ int main() {
 
 	// block to ensure release of resources before terminating the glfw context
 	{
-		Model ourModel("models/IronMan/IronMan.obj");
+		Model ourModel("models/chair/Swing Chair.obj");
 
 		Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 		float deltaTime = 0.0f;

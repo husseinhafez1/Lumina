@@ -12,7 +12,7 @@ void Model::Draw(Shader& shader) {
 
 void Model::loadModel(const std::string& path) {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 		std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
@@ -78,12 +78,14 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
 
 std::vector<Texture*> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, TextureType typeName) {
 	std::vector<Texture*> textures;
+	textures_loaded.reserve(textures_loaded.size() + mat->GetTextureCount(type));
 	for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
 		aiString str;
 		mat->GetTexture(type, i, &str);
 		bool skip = false;
+		std::string fullPath = directory + '/' + str.C_Str();
 		for (unsigned int j = 0; j < textures_loaded.size(); j++) {
-			if (std::strcmp(textures_loaded[j]->GetPath().c_str(), str.C_Str()) == 0) {
+			if (textures_loaded[j]->GetPath() == fullPath) {
 				textures.push_back(textures_loaded[j].get());
 				skip = true;
 				break;
