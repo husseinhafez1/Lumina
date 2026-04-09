@@ -35,7 +35,9 @@ int main() {
 
 	// block to ensure release of resources before terminating the glfw context
 	{
-		Model ourModel("models/chair/Swing Chair.obj");
+		stbi_set_flip_vertically_on_load(true);
+
+		Model ourModel("models/backpack/backpack.obj");
 
 		Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 		float deltaTime = 0.0f;
