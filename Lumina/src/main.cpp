@@ -1,27 +1,41 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <stb_image.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "shader.h"
+#include "camera.h"
+#include "model.h"
+#include "Window.h"
+
 #include <iostream>
 
-#include "shader.h"
-#include "Camera.h"
-#include "VertexBufferLayout.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "VertexArray.h"
-#include "Texture.h"
-#include "Window.h"
-#include "Input.h"
-#include "Model.h"
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void processInput(GLFWwindow* window);
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
+
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
 int main() {
+    int userInput;
+    std::cout << "Do you want to flip the loaded textures vertically? (0 for no, 1 for yes): ";
+    std::cin >> userInput;
+    if (userInput == 1) {
+        stbi_set_flip_vertically_on_load(true);
+    }
+
 	Window window(SCR_WIDTH, SCR_HEIGHT);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -29,55 +43,100 @@ int main() {
 		return -1;
 	}
 
+    glfwSetFramebufferSizeCallback(window.GetHandle(), framebuffer_size_callback);
+	glfwSetCursorPosCallback(window.GetHandle(), mouse_callback);
+	glfwSetScrollCallback(window.GetHandle(), scroll_callback);
+
 	glEnable(GL_DEPTH_TEST);
 
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
 	// block to ensure release of resources before terminating the glfw context
 	{
-		stbi_set_flip_vertically_on_load(true);
 
-		Model ourModel("models/backpack/backpack.obj");
-
-		Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-		float deltaTime = 0.0f;
-		float lastFrame = 0.0f;
-
-		Input input(window, camera);
-		input.SetupCallbacks();
+		Model ourModel("models/sisi/sisi.obj");
 
 		Shader lightingShader("res/color.vs", "res/color.fs");
-
-		bool spotlightOn = true;
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		while (window.isClosed()) {
-			float currentFrame = static_cast<float>(glfwGetTime());
-			deltaTime = currentFrame - lastFrame;
-			lastFrame = currentFrame;
+            // per-frame time logic
+            float currentFrame = static_cast<float>(glfwGetTime());
+            deltaTime = currentFrame - lastFrame;
+            lastFrame = currentFrame;
 
-			input.ProcessKeyboard(deltaTime);
+            // input
+            processInput(window.GetHandle());
 
-			glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            // render
+            glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			lightingShader.use();
+            lightingShader.use();
 
-			glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)window.GetWidth() / (float)window.GetHeight(), 0.1f, 100.0f);
-			glm::mat4 view = camera.GetViewMatrix();
-			lightingShader.setMat4("projection", projection);
-			lightingShader.setMat4("view", view);
+            // view/projection transformations
+            glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+            glm::mat4 view = camera.GetViewMatrix();
+            lightingShader.setMat4("projection", projection);
+            lightingShader.setMat4("view", view);
 
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::scale(model, glm::vec3(0.1f));
-			lightingShader.setMat4("model", model);
+            // render the loaded model
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+            model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+            lightingShader.setMat4("model", model);
+            ourModel.Draw(lightingShader);
 
-			ourModel.Draw(lightingShader);
-
-			glfwSwapBuffers(window.GetHandle());
-			glfwPollEvents();
+            glfwSwapBuffers(window.GetHandle());
+            glfwPollEvents();
 		}
 	}
 	return 0;
+}
+
+void processInput(GLFWwindow* window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.ProcessKeyboard(RIGHT, deltaTime);
+}
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
+
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+{
+    float xpos = static_cast<float>(xposIn);
+    float ypos = static_cast<float>(yposIn);
+
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+
+    camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }

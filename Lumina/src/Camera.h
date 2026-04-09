@@ -1,16 +1,19 @@
-#pragma once
+#ifndef CAMERA_H
+#define CAMERA_H
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+// define possible camera movements
 enum Camera_Movement {
-	FORWARD,
-	BACKWARD,
-	LEFT,
-	RIGHT
+    FORWARD,
+    BACKWARD,
+    LEFT,
+    RIGHT
 };
 
+// Default camera values
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
 const float SPEED = 2.5f;
@@ -20,15 +23,18 @@ const float ZOOM = 45.0f;
 class Camera
 {
 public:
+    // camera Attributes
     glm::vec3 Position;
     glm::vec3 Front;
     glm::vec3 Up;
     glm::vec3 Right;
     glm::vec3 WorldUp;
 
+    // euler Angles
     float Yaw;
     float Pitch;
 
+    // camera options
     float MovementSpeed;
     float MouseSensitivity;
     float Zoom;
@@ -41,7 +47,7 @@ public:
         Pitch = pitch;
         updateCameraVectors();
     }
-
+    
     Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
     {
         Position = glm::vec3(posX, posY, posZ);
@@ -77,7 +83,6 @@ public:
         Yaw += xoffset;
         Pitch += yoffset;
 
-        // make sure that when pitch is out of bounds, screen doesn't get flipped
         if (constrainPitch)
         {
             if (Pitch > 89.0f)
@@ -86,7 +91,6 @@ public:
                 Pitch = -89.0f;
         }
 
-        // update Front, Right and Up Vectors using the updated Euler angles
         updateCameraVectors();
     }
 
@@ -112,4 +116,4 @@ private:
         Up = glm::normalize(glm::cross(Right, Front));
     }
 };
-
+#endif
