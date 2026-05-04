@@ -6,8 +6,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "shader.h"
-#include "camera.h"
-#include "model.h"
+#include "Camera.h"
+#include "Model.h"
 #include "Window.h"
 
 #include <iostream>
