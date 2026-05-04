@@ -1,6 +1,6 @@
 # Lumina
 
-An OpenGL renderer in C++ following the LearnOpenGL curriculum — raw triangles up through full model loading and lighting.
+An OpenGL renderer in C++ — raw triangles up through full model loading and lighting.
 
 ---
 
