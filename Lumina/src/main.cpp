@@ -54,9 +54,9 @@ int main() {
 	// block to ensure release of resources before terminating the glfw context
 	{
 
-		Model ourModel("models/sisi/sisi.obj");
+		Model ourModel("models/backpack/backpack.obj");
 
-		Shader lightingShader("res/color.vs", "res/color.fs");
+		Shader lightingShader("res/model_loading.vs", "res/model_loading.fs");
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
