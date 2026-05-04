@@ -40,12 +40,61 @@ public:
     unsigned int VAO;
 
     Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
+        : vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures))
     {
-        this->vertices = vertices;
-        this->indices = indices;
-        this->textures = textures;
+        setupMesh();
+    }
+
+    ~Mesh() {
+        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(1, &EBO);
+        glDeleteVertexArrays(1, &VAO);
+    }
+
+    Mesh(const Mesh& other)
+        : vertices(other.vertices), indices(other.indices), textures(other.textures)
+    {
+        setupMesh();
+    }
+
+    Mesh& operator=(const Mesh& other) {
+        if (this == &other) return *this;
+
+        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(1, &EBO);
+        glDeleteVertexArrays(1, &VAO);
+
+        vertices = other.vertices;
+        indices = other.indices;
+        textures = other.textures;
 
         setupMesh();
+        return *this;
+    }
+
+    Mesh(Mesh&& other) noexcept
+        : vertices(std::move(other.vertices)),
+        indices(std::move(other.indices)),
+        textures(std::move(other.textures)),
+        VAO(other.VAO), VBO(other.VBO), EBO(other.EBO)
+    {
+        other.VAO = other.VBO = other.EBO = 0;
+    }
+
+    Mesh& operator=(Mesh&& other) noexcept {
+        if (this == &other) return *this;
+
+        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(1, &EBO);
+        glDeleteVertexArrays(1, &VAO);
+
+        vertices = std::move(other.vertices);
+        indices = std::move(other.indices);
+        textures = std::move(other.textures);
+        VAO = other.VAO; VBO = other.VBO; EBO = other.EBO;
+        other.VAO = other.VBO = other.EBO = 0;
+
+        return *this;
     }
 
     void Draw(Shader& shader)
