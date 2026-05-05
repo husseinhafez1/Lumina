@@ -39,10 +39,30 @@
   <ItemGroup>
     <None Include="dependencies\GLFW\lib\glfw3.dll" />
     <None Include="Lumina.slnx" />
+    <None Include="res\basic.fs" />
+    <None Include="res\basic.vs" />
+    <None Include="res\basic_lighting.fs" />
+    <None Include="res\basic_lighting.vs" />
+    <None Include="res\camera.fs" />
+    <None Include="res\camera.vs" />
     <None Include="res\color.fs" />
     <None Include="res\color.vs" />
+    <None Include="res\depth_testing.fs" />
+    <None Include="res\depth_testing.vs" />
+    <None Include="res\lighting_map.fs" />
+    <None Include="res\lighting_map.vs" />
+    <None Include="res\light_casters.fs" />
+    <None Include="res\light_casters.vs" />
     <None Include="res\light_cube.fs" />
     <None Include="res\light_cube.vs" />
+    <None Include="res\material.fs" />
+    <None Include="res\material.vs" />
+    <None Include="res\model_loading.fs" />
+    <None Include="res\model_loading.vs" />
+    <None Include="res\multiple_lights.fs" />
+    <None Include="res\multiple_lights.vs" />
+    <None Include="res\texture.fs" />
+    <None Include="res\texture.vs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dependencies\GLFW\lib\glfw3.lib" />
