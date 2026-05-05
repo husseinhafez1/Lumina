@@ -1,6 +1,6 @@
 # Lumina
 
-An OpenGL renderer in C++ — raw triangles up through full model loading and lighting.
+An OpenGL renderer in C++ — raw triangles up through depth testing, lighting, and model loading.
 
 ---
 
@@ -12,13 +12,13 @@ An OpenGL renderer in C++ — raw triangles up through full model loading and li
 Wraps GLFW window creation and lifetime. Sets up the OpenGL context, handles the macOS forward-compat hint, and captures the cursor for free-look movement.
 
 **`Shader`** (`src/shader.h`)  
-Reads vertex and fragment source from disk, compiles and links them, and gives you typed uniform setters (`setMat4`, `setVec3`, `setFloat`, etc.).
+Reads vertex and fragment source from disk, compiles and links them, and gives you typed uniform setters (`setMat4`, `setVec3`, `setFloat`, etc.). Destructor calls `glDeleteProgram`.
 
 **`Camera`** (`src/Camera.h`)  
 Euler-angle fly camera. WASD moves it, mouse delta rotates it, scroll changes the FOV. Returns a view matrix from `glm::lookAt`.
 
 **`Mesh`** (`src/Mesh.h`)  
-Owns a VAO/VBO/EBO for one draw call. Vertex layout covers position, normal, UV, tangent, bitangent, and bone weights (the last two are stubs for skinning down the road). `Draw()` binds textures by convention (`texture_diffuse1`, `texture_specular1`, …) then calls `glDrawElements`.
+Owns a VAO/VBO/EBO for one draw call. Full rule-of-five: copy re-uploads to fresh GPU buffers, move steals the handles and zeroes the source. Vertex layout covers position, normal, UV, tangent, bitangent, and bone weights. `Draw()` binds textures by convention (`texture_diffuse1`, `texture_specular1`, …) then calls `glDrawElements`.
 
 **`Model`** (`src/Model.h`)  
 Loads arbitrary 3D files via Assimp. Walks the node tree recursively, pulls out meshes and materials, and caches textures so the same image isn't uploaded to the GPU twice.
@@ -30,7 +30,7 @@ Loads arbitrary 3D files via Assimp. Walks the node tree recursively, pulls out 
 Each pair in `res/` covers one technique, roughly in the order the concepts stack on top of each other.
 
 ### `basic` — Vertex colors
-As bare as it gets. The vertex shader passes a per-vertex `vec3` color through; the fragment shader outputs it unchanged. No transforms, no lighting.
+The vertex shader passes a per-vertex `vec3` color through; the fragment shader outputs it unchanged. No transforms, no lighting.
 
 ### `texture` — Texture mapping
 Adds UV coordinates and two `sampler2D` uniforms. The fragment shader blends them 80/20 with `mix()`. Still no 3D transforms — positions go straight to clip space.
@@ -48,7 +48,7 @@ The classic three-term model:
 Normals go through the *normal matrix* (`transpose(inverse(model))`) to stay perpendicular to the surface when the mesh is non-uniformly scaled.
 
 ### `color` / `light_cube` — Light source geometry
-`color.fs` tints an object by `lightColor * objectColor`. `light_cube` draws the light source itself as a plain white cube, unaffected by any lighting calculation.
+`color.fs` tints an object by `lightColor * objectColor`. `light_cube` draws the light source itself as a plain white cube, outside the lighting math.
 
 ### `material` — Struct-based properties
 Ambient/diffuse/specular colors and shininess move into a GLSL `struct Material`. The light gets a struct too. Cleaner than juggling separate uniforms when you want to vary materials per object.
@@ -60,7 +60,10 @@ Swaps the flat material colors for `sampler2D diffuse` and `sampler2D specular` 
 Turns the point light into a spotlight by adding a direction and `cutOff` angle. `outerCutOff` gives it a soft penumbra: `clamp((theta - outerCutOff) / epsilon, 0, 1)`. Attenuation (`1 / (constant + linear*d + quadratic*d²)`) fades the light with distance.
 
 ### `multiple_lights` — Accumulated contributions
-Three structs (`DirLight`, `PointLight`, `SpotLight`), each with its own calculation function. `main()` sums the results. The standard forward-renderer approach for mixed light types.
+Three structs (`DirLight`, `PointLight`, `SpotLight`), each with its own calculation function. `main()` sums the results. The standard forward-renderer pattern for mixed light types.
+
+### `depth_testing` — Visualising the depth buffer
+The fragment shader reads `gl_FragCoord.z`, converts it back to a linear view-space distance, and outputs that as greyscale. Skip the linearisation step and the whole scene goes nearly white — the perspective projection packs almost everything into the far end of the [0, 1] range.
 
 ### `model_loading` — Textured mesh from file
 Samples `texture_diffuse1` and applies MVP. The minimal shader that pairs with the `Model` class for loading `.obj` files through Assimp.
@@ -79,6 +82,7 @@ Samples `texture_diffuse1` and applies MVP. The minimal shader that pairs with t
 | Mipmaps & texture filtering | `Model::TextureFromFile()` |
 | Light attenuation | `light_casters.fs`, `multiple_lights.fs` |
 | Spotlight cone math | `light_casters.fs` |
+| Depth buffer linearisation | `depth_testing.fs` |
 | Assimp scene graph traversal | `Model::processNode()` |
 
 ---
@@ -90,12 +94,3 @@ Samples `texture_diffuse1` and applies MVP. The minimal shader that pairs with t
 - [GLM](https://github.com/g-truc/glm) — math (vectors, matrices, transforms)
 - [stb_image](https://github.com/nothings/stb) — texture loading
 - [Assimp](https://github.com/assimp/assimp) — 3D model import
-
----
-
-## Running
-
-1. Put a model at `models/backpack/backpack.obj` (or change the path in `main.cpp`).
-2. Build with CMake — OpenGL 3.3 core profile required.
-3. On launch you'll be asked whether to flip textures vertically. Say `1` for most `.obj` files out of Blender.
-4. **WASD** to fly, **mouse** to look, **scroll** to zoom. **Escape** quits.
