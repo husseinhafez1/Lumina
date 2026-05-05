@@ -1,6 +1,6 @@
 # Lumina
 
-An OpenGL renderer in C++ — raw triangles up through depth testing, lighting, and model loading.
+An OpenGL renderer in C++ — raw triangles up through stencil-based outlines, depth testing, lighting, and model loading.
 
 ---
 
@@ -33,7 +33,7 @@ Each pair in `res/` covers one technique, roughly in the order the concepts stac
 The vertex shader passes a per-vertex `vec3` color through; the fragment shader outputs it unchanged. No transforms, no lighting.
 
 ### `texture` — Texture mapping
-Adds UV coordinates and two `sampler2D` uniforms. The fragment shader blends them 80/20 with `mix()`. Still no 3D transforms — positions go straight to clip space.
+Adds UV coordinates and a `sampler2D` uniform. The fragment shader samples it directly. Used as the main object shader in the current scene.
 
 ### `camera` — MVP transforms
 Adds the Model–View–Projection stack. Position gets multiplied by `projection * view * model`, so things sit correctly in 3D as the camera moves around.
@@ -65,6 +65,9 @@ Three structs (`DirLight`, `PointLight`, `SpotLight`), each with its own calcula
 ### `depth_testing` — Visualising the depth buffer
 The fragment shader reads `gl_FragCoord.z`, converts it back to a linear view-space distance, and outputs that as greyscale. Skip the linearisation step and the whole scene goes nearly white — the perspective projection packs almost everything into the far end of the [0, 1] range.
 
+### `stencil_testing` — Object outlines
+The fragment shader outputs a flat teal color. Used as a second pass: the cubes are drawn normally first (writing `1` into the stencil buffer), then redrawn at 1.1× scale with `GL_NOTEQUAL` — so only the pixels just outside the original silhouette get the tint. Depth testing is disabled for this pass so the outline doesn't get clipped.
+
 ### `model_loading` — Textured mesh from file
 Samples `texture_diffuse1` and applies MVP. The minimal shader that pairs with the `Model` class for loading `.obj` files through Assimp.
 
@@ -83,6 +86,7 @@ Samples `texture_diffuse1` and applies MVP. The minimal shader that pairs with t
 | Light attenuation | `light_casters.fs`, `multiple_lights.fs` |
 | Spotlight cone math | `light_casters.fs` |
 | Depth buffer linearisation | `depth_testing.fs` |
+| Stencil buffer & object outlines | `stencil_testing.fs`, `main.cpp` |
 | Assimp scene graph traversal | `Model::processNode()` |
 
 ---
