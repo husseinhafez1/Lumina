@@ -49,7 +49,7 @@ int main() {
     glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-
+    std::cout << glGetString(GL_VERSION) << std::endl;
 	// block to ensure release of resources before terminating the glfw context
 	{
 
