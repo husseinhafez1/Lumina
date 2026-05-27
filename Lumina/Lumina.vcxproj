@@ -43,6 +43,8 @@
     <None Include="res\basic.vs" />
     <None Include="res\basic_lighting.fs" />
     <None Include="res\basic_lighting.vs" />
+    <None Include="res\blending.fs" />
+    <None Include="res\blending.vs" />
     <None Include="res\camera.fs" />
     <None Include="res\camera.vs" />
     <None Include="res\color.fs" />

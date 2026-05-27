@@ -91,6 +91,8 @@
     <None Include="res\depth_testing.vs" />
     <None Include="res\depth_testing.fs" />
     <None Include="res\stencil_testing.fs" />
+    <None Include="res\blending.fs" />
+    <None Include="res\blending.vs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="dependencies\GLFW\lib\glfw3.lib" />
