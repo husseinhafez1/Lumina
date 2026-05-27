@@ -42,10 +42,9 @@ int main() {
 	glfwSetScrollCallback(window.GetHandle(), scroll_callback);
 
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
 
 	// block to ensure release of resources before terminating the glfw context
 	{
@@ -104,7 +103,6 @@ int main() {
             -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
              5.0f, -0.5f, -5.0f,  2.0f, 2.0f
         };
-
         float transparentVertices[] = {
             // positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
             0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
@@ -157,9 +155,9 @@ int main() {
 
         unsigned int cubeTexture = loadTexture("textures/marble.jpg");
         unsigned int floorTexture = loadTexture("textures/metal.png");
-        unsigned int transparentTexture = loadTexture("textures/grass.png");
+        unsigned int transparentTexture = loadTexture("textures/window.png");
 
-        std::vector<glm::vec3> vegetation
+        std::vector<glm::vec3> windows
         {
             glm::vec3(-1.5f, 0.0f, -0.48f),
             glm::vec3(1.5f, 0.0f, 0.51f),
@@ -167,6 +165,7 @@ int main() {
             glm::vec3(-0.3f, 0.0f, -2.3f),
             glm::vec3(0.5f, 0.0f, -0.6f)
         };
+
 
 		Shader shader("res/blending.vs", "res/blending.fs");
 
@@ -183,6 +182,13 @@ int main() {
 
             // input
             processInput(window.GetHandle());
+
+            std::map<float, glm::vec3> sorted;
+            for (unsigned int i = 0; i < windows.size(); i++)
+            {
+                float distance = glm::length(camera.Position - windows[i]);
+                sorted[distance] = windows[i];
+            }
 
             // render
             glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -212,13 +218,13 @@ int main() {
             model = glm::mat4(1.0f);
             shader.setMat4("model", model);
             glDrawArrays(GL_TRIANGLES, 0, 6);
-            // vegetation
+            // windows (from furthest to nearest)
             glBindVertexArray(transparentVAO);
             glBindTexture(GL_TEXTURE_2D, transparentTexture);
-            for (unsigned int i = 0; i < vegetation.size(); i++)
+            for (std::map<float, glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
             {
                 model = glm::mat4(1.0f);
-                model = glm::translate(model, vegetation[i]);
+                model = glm::translate(model, it->second);
                 shader.setMat4("model", model);
                 glDrawArrays(GL_TRIANGLES, 0, 6);
             }
