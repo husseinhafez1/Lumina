@@ -124,6 +124,42 @@ private:
             vertices.push_back(vertex);
         }
 
+        for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
+            memset(vertices[i].m_BoneIDs, -1, MAX_BONE_INFLUENCE * sizeof(int));
+        }
+
+        for (unsigned int i = 0; i < mesh->mNumBones; i++) {
+            for (unsigned int j = 0; j < mesh->mBones[i]->mNumWeights; j++) {
+                unsigned int vertexId = mesh->mBones[i]->mWeights[j].mVertexId;
+                float weight = mesh->mBones[i]->mWeights[j].mWeight;
+                bool placed = false;
+                for (unsigned int k = 0; k < MAX_BONE_INFLUENCE; k++) {
+                    if (vertices[vertexId].m_BoneIDs[k] == -1) {
+                        vertices[vertexId].m_BoneIDs[k] = i;
+                        vertices[vertexId].m_Weights[k] = weight;
+                        placed = true;
+                        break;
+                    }
+                }
+                if (!placed) {
+                    std::clog << "Vertex " << vertexId << " has more than " << MAX_BONE_INFLUENCE << " bone influences; dropping weight " << weight << "\n";
+                }
+            }
+        }
+
+        for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
+            float sum = 0;
+            for (unsigned int k = 0; k < MAX_BONE_INFLUENCE; k++) {
+                sum += vertices[i].m_Weights[k];
+            }
+
+            if (sum > 0.0f) {
+                for (unsigned int k = 0; k < MAX_BONE_INFLUENCE; k++) {
+                    vertices[i].m_Weights[k] /= sum;
+                }
+            }
+        }
+
         for (unsigned int i = 0; i < mesh->mNumFaces; i++)
         {
             aiFace face = mesh->mFaces[i];
