@@ -21,6 +21,12 @@
 #include <vector>
 
 unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
+glm::mat4 AssimpToGlmMatrix(const aiMatrix4x4& from);
+
+struct BoneInfo {
+    int boneIndex;
+    glm::mat4 mOffsetMatrix;
+};
 
 class Model
 {
@@ -28,6 +34,7 @@ public:
     std::vector<Texture> textures_loaded;
     std::vector<Mesh>    meshes;
     std::string directory;
+    std::map<std::string, BoneInfo> boneInfo;
     bool gammaCorrection;
 
     Model(std::string const& path, bool gamma = false) : gammaCorrection(gamma)
@@ -129,13 +136,25 @@ private:
         }
 
         for (unsigned int i = 0; i < mesh->mNumBones; i++) {
+
+            std::string boneName = mesh->mBones[i]->mName.C_Str();
+
+            if (boneInfo.find(boneName) == boneInfo.end()) {
+                BoneInfo newBone;
+                newBone.boneIndex = i;
+                newBone.mOffsetMatrix = AssimpToGlmMatrix(mesh->mBones[i]->mOffsetMatrix);
+                boneInfo[boneName] = newBone;
+            }
+
+            int consistentBoneIndex = boneInfo[boneName].boneIndex;
+
             for (unsigned int j = 0; j < mesh->mBones[i]->mNumWeights; j++) {
                 unsigned int vertexId = mesh->mBones[i]->mWeights[j].mVertexId;
                 float weight = mesh->mBones[i]->mWeights[j].mWeight;
                 bool placed = false;
                 for (unsigned int k = 0; k < MAX_BONE_INFLUENCE; k++) {
                     if (vertices[vertexId].m_BoneIDs[k] == -1) {
-                        vertices[vertexId].m_BoneIDs[k] = i;
+                        vertices[vertexId].m_BoneIDs[k] = consistentBoneIndex;
                         vertices[vertexId].m_Weights[k] = weight;
                         placed = true;
                         break;
@@ -217,6 +236,16 @@ private:
         return textures;
     }
 };
+
+glm::mat4 AssimpToGlmMatrix(const aiMatrix4x4& from)
+{
+    glm::mat4 to;
+    to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
+    to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
+    to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
+    to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
+    return to;
+}
 
 
 unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma)
